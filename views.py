@@ -1,7 +1,8 @@
-import bottle
+import bottle, os, json, uuid
 from bottle import route, abort, request, HTTPError, HTTPResponse, post, get, delete, put
-import json
 from models import *
+
+image_dir = "/home/ngon2/images"
 
 @get('/upload')
 def upload_get():
@@ -13,8 +14,7 @@ def upload_get():
 
 <body>
 <form action="/upload" method="post" enctype="multipart/form-data">
-    <input type="text" name="name" />
-    <input type="file" name="data" />
+    <input type="file" name="data" multiple="multiple"/>
     <input type="submit" />
 </form>
 </body>
@@ -25,9 +25,21 @@ def upload_get():
 
 @post('/upload')
 def upload():
-    data = request.files.data
-    if data and data.file:
-        raw = data.file.read() # This is dangerous for big files
-        filename = data.filename
-        return "Hello You uploaded %s (%d bytes)." % (filename, len(raw))
-    return "You missed a field."
+    files = request.files.getlist('data')
+    for f in files:
+        ext = os.path.splitext(f.filename)[1]
+        ext = ext.lower()
+        if ext == ".jpeg" or ext == ".jpg" or ext == ".png":
+            fn = str(uuid.uuid4()) + ext
+            chunk = None
+            fout = file (os.path.join(image_dir, fn), 'wb')
+            while (1):
+                chunk = f.file.read(100000)
+                if not chunk:
+                    break;
+                fout.write(chunk)
+            fout.close()
+    return "done"
+            
+            
+        
