@@ -32,6 +32,7 @@ class Images(Base):
     viewcount = Column(Integer, default = 0)
     width = Column(Integer, default = 0)
     height = Column(Integer, default = 0)
+    size = Column(Integer, default = 0)
     
     def __repr__(self):
         return self.name
@@ -60,6 +61,7 @@ class Images(Base):
             'viewcount': self.viewcount,
             'width': self.width,
             'height': self.height,
+            'size': self.size,
         }
 
     @classmethod
@@ -84,6 +86,16 @@ class Images(Base):
     def by_month(cls, month):
         return session.query(Images).filter(sqlalchemy.extract('month',\
                                 Images.date) == month)
+    @classmethod
+    def get_all(cls):
+        return session.query(Images).all()
+
+    @classmethod
+    def inc_view(cls, img_id):
+        img = Images.by_id(img_id)
+        img.viewcount += 1
+        session.add(img)
+        session.commit()
     
     @classmethod
     def create(cls, img_dict):
@@ -101,6 +113,9 @@ class Images(Base):
 
         if 'height' in img_dict:
             img.height = img_dict['height']
+
+        if 'size' in img_dict:
+            img.size = img_dict['size']
         return img
 
 class Tags(Base):
