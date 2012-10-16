@@ -64,24 +64,32 @@ def json_all_imgs():
 
 @get('/images/id/<id:int>')
 def img_get_by_id(id):
-    url = Images.by_id(id).url
-    Images.inc_view(id)
-    return static_file(url, root=image_dir)
+    img = Images.by_id(id)
+    if img:
+        url = img.url
+        Images.inc_view(id)
+        return static_file(url, root=image_dir)
+    else:
+        abort(404, "image not found")
 
 @get('/images/thumb/id/<id:int>')
 def img_get_thumb_by_id(id):
-    url = Images.by_id(id).url
-    output = StringIO.StringIO()
+    img = Images.by_id(id)
+    if img:
+        url = img.url
+        output = StringIO.StringIO()
 
-    size = 160, 160
-    im = pilImage.open(os.path.join(image_dir, url))
-    im.thumbnail(size, pilImage.ANTIALIAS)
-    im.save(output, "jpeg")
-    final_img = output.getvalue()
-    output.close()
+        size = 160, 160
+        im = pilImage.open(os.path.join(image_dir, url))
+        im.thumbnail(size, pilImage.ANTIALIAS)
+        im.save(output, "jpeg")
+        final_img = output.getvalue()
+        output.close()
 
-    response.content_type = 'image/jpeg'
-    return final_img
+        response.content_type = 'image/jpeg'
+        return final_img
+    else:
+        abort(404, "image not found")
 
 
 
