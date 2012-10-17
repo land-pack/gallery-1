@@ -12,8 +12,13 @@ window.Router = Backbone.Router.extend({
 
     list: function () 
     {
-        this.list = new window.views.ImageListItem();
-        $("#content").html(this.list.el);
+        this.imgList = new models.ImageList();
+        var self = this;
+        this.imgList.fetch({
+            success: function () {
+                self.imgListView = new views.ImageList({model: self.imgList});
+            }
+        });
     },
 
     imageDetail: function (ticketid)

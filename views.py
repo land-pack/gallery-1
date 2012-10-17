@@ -62,6 +62,12 @@ def json_all_imgs():
     d = [img.to_dict() for img in Images.get_all()]
     return json.dumps(d, default=dthandler)
 
+@get('/json/images/<id:int>')
+def json_get_img_by_id(id):
+    d = Images.by_id(id).to_dict()
+    return json.dumps(d, default=dthandler)
+
+
 @get('/images/id/<id:int>')
 def img_get_by_id(id):
     img = Images.by_id(id)
