@@ -51,6 +51,14 @@ def upload():
                 'name': orgfn + ext,
                 'size': os.path.getsize(im.filename),
             }
+
+            size = 160, 160
+            im.thumbnail(size, pilImage.ANTIALIAS)
+            img_dict['thumb_width'] = im.size[0]
+            img_dict['thumb_height'] = im.size[1]
+            thumb_output = os.path.join(image_dir, "thumb" + fn)
+            im.save(thumb_output, "jpeg")
+
             img = Images.create(img_dict)
             session.add(img)
     session.commit()
@@ -82,18 +90,8 @@ def img_get_by_id(id):
 def img_get_thumb_by_id(id):
     img = Images.by_id(id)
     if img:
-        url = img.url
-        output = StringIO.StringIO()
-
-        size = 160, 160
-        im = pilImage.open(os.path.join(image_dir, url))
-        im.thumbnail(size, pilImage.ANTIALIAS)
-        im.save(output, "jpeg")
-        final_img = output.getvalue()
-        output.close()
-
-        response.content_type = 'image/jpeg'
-        return final_img
+        url = "thumb" + img.url
+        return static_file(url, root=image_dir)
     else:
         abort(404, "image not found")
 

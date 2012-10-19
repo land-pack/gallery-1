@@ -33,6 +33,9 @@ class Images(Base):
     width = Column(Integer, default = 0)
     height = Column(Integer, default = 0)
     size = Column(Integer, default = 0)
+    thumb_width = Column(Integer, default = 0)
+    thumb_height = Column(Integer, default = 0)
+
     
     def __repr__(self):
         return self.name
@@ -62,6 +65,8 @@ class Images(Base):
             'width': self.width,
             'height': self.height,
             'size': self.size,
+            'thumb_width': self.thumb_width,
+            'thumb_height': self.thumb_height,
         }
 
     @classmethod
@@ -116,6 +121,13 @@ class Images(Base):
 
         if 'size' in img_dict:
             img.size = img_dict['size']
+            
+        if 'thumb_width' in img_dict:
+            img.width = img_dict['thumb_width']
+
+        if 'thumb_height' in img_dict:
+            img.height = img_dict['thumb_height']
+
         return img
 
 class Tags(Base):
