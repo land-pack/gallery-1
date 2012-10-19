@@ -55,7 +55,7 @@ class Images(Base):
             raise ex
 
     def to_dict(self):
-        return {
+        d = {
             'id': self.id,
             'name': self.name,
             'url': self.url,
@@ -68,6 +68,8 @@ class Images(Base):
             'thumb_width': self.thumb_width,
             'thumb_height': self.thumb_height,
         }
+        d['tag_count'] = len(d['tags'])
+        return d
 
     @classmethod
     def by_id(cls, img_id): 
@@ -145,6 +147,20 @@ class Tags(Base):
 
     def add_images(self, image):
         self.images.add(image)
+
+    def to_dict(self):
+        d = {
+            'name': self.name,
+            'id': self.id,
+            'images': [img.id for img in self.images],
+            'total_view': sum([img.viewcount for img in self.images]),  #god forgive me
+        }
+        d['image_count'] = len(d['images'])
+        return d
+
+    @classmethod
+    def get_all(self):
+        return session.query(Tags).all()
 
     @classmethod
     def by_image_id(self, image_id):

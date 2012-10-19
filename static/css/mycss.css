@@ -1,3 +1,24 @@
 .thumb {
     float: 'left';
+    margin: 2px;
+}
+
+.info_bar {
+    position: absolute;
+    bottom: 0px;
+    background: #fff;
+    opacity: 0.5;
+    width: 100%;
+}
+
+.tagPageMain {
+    width: 30%;
+    min-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+body {
+    background: #1F1E1D;
 }

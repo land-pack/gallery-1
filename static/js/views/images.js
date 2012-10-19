@@ -2,6 +2,12 @@ window.views = window.views || {}
 
 window.views.ImageListItem = Backbone.View.extend({
     tagName: 'div',
+
+    events: {
+        "mouseenter": "showInfoBar",
+        "mouseleave": "hideInfoBar"
+    },
+
     initialize: function () {
         this.model.bind("change", this.render, this);
         this.model.bind("destroy", this.close, this);
@@ -11,11 +17,28 @@ window.views.ImageListItem = Backbone.View.extend({
         $(this.el).attr("class", "thumb");
         var html = Mustache.to_html(this.template, this.model.toJSON());
         $(this.el).html(html); 
+
+        if (!window.is_touch) {
+            this.$(".info_bar").hide();
+        }
+
         var thumb_width = this.model.get('thumb_width');
         var thumb_height = this.model.get('thumb_height');
         $(this.el).css("width", thumb_width);
         $(this.el).css("height", thumb_height);
         return this;
+    },
+
+    showInfoBar: function () {
+        if (!window.is_touch) {
+            this.$(".info_bar").show();
+        }
+    },
+
+    hideInfoBar: function () {
+        if (!window.is_touch) {
+            this.$(".info_bar").hide();
+        }
     },
 
     close: function () {
@@ -44,6 +67,11 @@ window.views.ImageList = Backbone.View.extend({
         $("#content").html(self.el);
         $(self.el).isotope({ layoutMode : 'fitRows' });
         return this;
+    },
+
+    close: function () {
+        $(this.el).unbind();
+        $(this.el).remove();
     }
 
 });

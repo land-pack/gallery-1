@@ -95,5 +95,22 @@ def img_get_thumb_by_id(id):
     else:
         abort(404, "image not found")
 
+@get('/json/tags')
+def json_all_tags():
+    d = []
+    for tag in Tags.get_all():
+        tag_dict = tag.to_dict()
+
+    return json.dumps(d, default=dthandler)
+
+@get('/json/tags/<id:int>')
+def get_tag_by_id(id):
+    d = Tags.by_id(id).to_dict()
+    return json.dumps(d, default=dthandler)
+
+@post('/json/tags')
+def json_create_tag():
+    return ""
+
 
 
