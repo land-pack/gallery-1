@@ -123,10 +123,10 @@ class Images(Base):
             img.size = img_dict['size']
             
         if 'thumb_width' in img_dict:
-            img.width = img_dict['thumb_width']
+            img.thumb_width = img_dict['thumb_width']
 
         if 'thumb_height' in img_dict:
-            img.height = img_dict['thumb_height']
+            img.thumb_height = img_dict['thumb_height']
 
         return img
 

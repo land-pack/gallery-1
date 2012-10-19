@@ -11,6 +11,10 @@ window.views.ImageListItem = Backbone.View.extend({
         $(this.el).attr("class", "thumb");
         var html = Mustache.to_html(this.template, this.model.toJSON());
         $(this.el).html(html); 
+        var thumb_width = this.model.get('thumb_width');
+        var thumb_height = this.model.get('thumb_height');
+        $(this.el).css("width", thumb_width);
+        $(this.el).css("height", thumb_height);
         return this;
     },
 
@@ -27,6 +31,7 @@ window.views.ImageList = Backbone.View.extend({
         this.model.bind("add", function (img) {
             $(self.el).append(new views.ImageListItem({model: img}).render().el);
         });
+        this.render();
     },
 
     render: function (eventName) {
@@ -36,9 +41,8 @@ window.views.ImageList = Backbone.View.extend({
             var html = imgItem.render().el;
             $(self.el).append(html);
         }, this);
-
         $("#content").html(self.el);
-
+        $(self.el).isotope({ layoutMode : 'fitRows' });
         return this;
     }
 
